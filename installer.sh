@@ -211,7 +211,7 @@ systemctl restart apache2
 ###############################
 
 # Doom install in doom.sh file
-bash doom.sh
+-u $USER bash doom.sh
 
 
 ###############################
@@ -244,7 +244,7 @@ done
 # Run wp-installer as user, not as root
 if [ "$ins" = true ]; then
   cd /development/www
-  bash wp-install.sh
+  -u $USER bash wp-install.sh
 fi
 
 # Reboot at the end of the install
