@@ -49,11 +49,6 @@ echo "deb https://dbeaver.io/debs/dbeaver-ce /" | sudo tee /etc/apt/sources.list
 # Update repos
 apt update
 
-# Install emacs26 & doom
-apt-get install -y emacs26
-git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom install
-
 # Install DBeaver
 apt-get install -y dbeaver-ce
 
@@ -122,6 +117,7 @@ usermod -aG www-data $USER
 ################################
 
 sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf
+sed -i "s#/var/www/#/development/www/#g" /etc/apache2/apache2.conf
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.3/apache2/php.ini
 sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.3/apache2/php.ini
 
@@ -143,9 +139,9 @@ mysql -p --execute="
   CREATE USER 'larqqa'@'%' IDENTIFIED BY 'admin';
   GRANT ALL ON *.* TO 'larqqa'@'%';"
 
-sed -i "s/bind-address = .*/bind-address = 0.0.0.0" /etc/mysql/mariadb.conf.d/50-server.cnf
-sed -i "s/max_binlog_size = .*/max_binlog_size = 100M" /etc/mysql/mariadb.conf.d/50-server.cnf
-sed -i "s/expire_logs_days = .*/expire_logs_days =  3" /etc/mysql/mariadb.conf.d/50-server.cnf
+sed -i "s/bind-address = .*/bind-address = 0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf
+sed -i "s/max_binlog_size = .*/max_binlog_size = 100M/" /etc/mysql/mariadb.conf.d/50-server.cnf
+sed -i "s/expire_logs_days = .*/expire_logs_days =  3/" /etc/mysql/mariadb.conf.d/50-server.cnf
 sed -i "/* InnoDB/a innodb_buffer_pool_size = 200M" /etc/mysql/mariadb.conf.d/50-server.cnf
 sed -i "/* InnoDB/a innodb_log_file_size = 100M" /etc/mysql/mariadb.conf.d/50-server.cnf
 sed -i "/* InnoDB/a innodb_buffer_pool_instances = 8" /etc/mysql/mariadb.conf.d/50-server.cnf
@@ -208,6 +204,14 @@ a2ensite lamp_server.conf
 a2dissite 000-default.conf
 systemctl restart apache2
 
+###############################
+#
+# Install doom as user
+#
+###############################
+
+# Doom install in doom.sh file
+bash doom.sh
 
 
 ###############################
@@ -222,30 +226,6 @@ chmod +x wp-cli.phar
 
 # Rename the wp-cli command to just wp
 sudo mv wp-cli.phar /usr/local/bin/wp
-
-
-
-###############################
-#
-# Personal stuff
-#
-###############################
-
-# Add personal doom conf
-cd ~/.doom.d
-git clone https://github.com/teemu-nurmi/doom-conf.git
-cp -r doom-conf/. .
-rm -rf doom-conf
-cd ..
-
-# Give user ownership of doom conf
-chown -R $USER:$USER ~/.doom.d
-chmod -R g+rwx ~/.doom.d
-
-# Refresh Doom
-cd ~/.emacs.d
-bin/doom refresh
-
 
 # Install Wordpress if user wants to
 ins=false
