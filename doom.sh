@@ -7,7 +7,8 @@
 ################################
 
 # Get username who invoked script
-[ $SUDO_USER ] && user=$SUDO_USER || user=`whoami`
+#[ $SUDO_USER ] && user=$SUDO_USER || user=`whoami`
+user=$USER
 
 # DBeaver
 wget -O - https://dbeaver.io/debs/dbeaver.gpg.key | sudo apt-key add -

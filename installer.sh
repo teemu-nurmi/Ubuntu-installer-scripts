@@ -190,4 +190,4 @@ systemctl restart apache2
 
 # Run installers & doom scripts
 cd ~/Ubuntu-installer-scripts
-bash doom.sh
+sudo -u $user bash doom.sh
