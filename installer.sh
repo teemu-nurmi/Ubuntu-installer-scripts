@@ -8,9 +8,17 @@
 #
 ################################
 
+# Get username who invoked script
+[ $SUDO_USER ] && user=$SUDO_USER || user=`whoami`
+
 # U & U
 apt update
 apt upgrade -y
+
+# Add computer ip to wp-installer script
+alias get_ip="ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'"
+sed -i "s/{COMPUTER_IP}/$get_ip/g" wp-install.sh
+
 
 # Get essential packages
 apt-get install -y build-essential dkms linux-headers-$(uname -r) software-properties-common
@@ -29,10 +37,6 @@ then
     mkdir /development
 fi
 
-# Give user permissions to the dev folder
-chown -R $USER:$USER /development
-chmod -R g+wrx /development
-
 # Get PPAs
 
 # php & apache
@@ -40,11 +44,7 @@ LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y
 LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/apache2 -y
 
 # Emacs
-add-apt-repository ppa:kelleyk/emacs
-
-# DBeaver
-wget -O - https://dbeaver.io/debs/dbeaver.gpg.key | sudo apt-key add -
-echo "deb https://dbeaver.io/debs/dbeaver-ce /" | sudo tee /etc/apt/sources.list.d/dbeaver.list
+add-apt-repository ppa:kelleyk/emacs -y
 
 # Update repos
 apt update
@@ -62,23 +62,6 @@ apt-get install -y python3-venv
 # PHP stuff
 apt-get install -y composer
 
-# Get phpcs
-composer global require "squizlabs/php_codesniffer=*"
-
-# Add phpcs to path, and get the source
-echo 'export PATH="~/.composer/vendor/bin:$PATH"' >>~/.profile
-source ~/.profile
-
-# Register custom folder for phpcs to look for standards
-mkdir ~/.config/composer/vendor/standards
-phpcs --config-set installed_paths ~/.config/composer/vendor/standards
-
-# Node stuff
-wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-source ~/.profile
-
-# Install newest node with nvm
-nvm install node
 
 
 ################################
@@ -105,8 +88,8 @@ a2enmod actions fastcgi proxy_fcgi
 systemctl restart apache2
 
 # Add apache to user and user to apache groups
-usermod -aG $USER www-data
-usermod -aG www-data $USER
+usermod -aG $user www-data
+usermod -aG www-data $user
 
 
 
@@ -204,48 +187,7 @@ a2ensite lamp_server.conf
 a2dissite 000-default.conf
 systemctl restart apache2
 
-###############################
-#
-# Install doom as user
-#
-###############################
 
-# Doom install in doom.sh file
--u $USER bash doom.sh
-
-
-###############################
-#
-# configure WP-Cli
-#
-################################
-
-# Get wp-cli executable
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-chmod +x wp-cli.phar
-
-# Rename the wp-cli command to just wp
-sudo mv wp-cli.phar /usr/local/bin/wp
-
-# Install Wordpress if user wants to
-ins=false
-while true; do
-read -p "Do you want to install WordPress? [y/N]
-" yn
-  case $yn in
-    [Yy]* )
-      ins=true
-      break;;
-    [Nn]* ) break;;
-    * ) echo "Please answer y or n.";;
-  esac
-done
-
-# Run wp-installer as user, not as root
-if [ "$ins" = true ]; then
-  cd /development/www
-  -u $USER bash wp-install.sh
-fi
-
-# Reboot at the end of the install
-reboot
+# Run installers & doom scripts
+cd ~/Ubuntu-installer-scripts
+bash doom.sh

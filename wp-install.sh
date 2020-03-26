@@ -70,7 +70,7 @@ else
 fi
 
 # Define default url after path is added
-default_url="http://192.168.43.12/${path}"
+default_url="http://{COMPUTER_IP}/${path}"
 
 echo "Set the database name. (Default: $default_dbname)"
 read dbname
