@@ -14,11 +14,14 @@ user=$USER
 wget -O - https://dbeaver.io/debs/dbeaver.gpg.key | sudo apt-key add -
 echo "deb https://dbeaver.io/debs/dbeaver-ce /" | sudo tee /etc/apt/sources.list.d/dbeaver.list
 
+# Install DBeaver
+sudo apt-get install -y dbeaver-ce
+
 # Get phpcs
-composer global require "squizlabs/php_codesniffer=*"
+composer global require "squizlabs/php_codesniffer"
 
 # Add phpcs to path, and get the source
-echo 'export PATH="~/.config/composer/vendor/bin:$PATH"' >>~/.profile
+echo 'export PATH=~/.config/composer/vendor/bin:$PATH' >>~/.profile
 source ~/.profile
 
 # Register custom folder for phpcs to look for standards

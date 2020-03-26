@@ -49,9 +49,6 @@ add-apt-repository ppa:kelleyk/emacs -y
 # Update repos
 apt update
 
-# Install DBeaver
-apt-get install -y dbeaver-ce
-
 # Install FireFox
 apt-get install -y firefox
 
