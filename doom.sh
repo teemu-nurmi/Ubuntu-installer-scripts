@@ -14,11 +14,13 @@ user=$USER
 wget -O - https://dbeaver.io/debs/dbeaver.gpg.key | sudo apt-key add -
 echo "deb https://dbeaver.io/debs/dbeaver-ce /" | sudo tee /etc/apt/sources.list.d/dbeaver.list
 
+wait $!
+
 # Install DBeaver
 sudo apt-get install -y dbeaver-ce
 
 # Get phpcs
-composer global require "squizlabs/php_codesniffer"
+composer global require "squizlabs/php_codesniffer=*"
 
 # Add phpcs to path, and get the source
 echo 'export PATH=~/.config/composer/vendor/bin:$PATH' >>~/.profile
@@ -31,6 +33,8 @@ phpcs --config-set installed_paths ~/.config/composer/vendor/standards
 # Node stuff
 wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 source ~/.profile
+
+wait $!
 
 # Install newest node with nvm
 nvm install node
