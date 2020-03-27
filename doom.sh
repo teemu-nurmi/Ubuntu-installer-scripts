@@ -21,21 +21,21 @@ sudo apt-get update
 sudo apt-get install -y dbeaver-ce
 
 # Get phpcs
-composer global require "squizlabs/php_codesniffer=*"
+composer global require squizlabs/php_codesniffer
 
 # Add phpcs to path, and get the source
-echo 'export PATH=~/.config/composer/vendor/bin:$PATH' >>~/.profile
+echo 'export PATH=~/.composer/vendor/bin:$PATH' >>~/.profile
 source ~/.profile
 
 # Register custom folder for phpcs to look for standards
-mkdir ~/.config/composer/vendor/standards
-phpcs --config-set installed_paths ~/.config/composer/vendor/standards
+mkdir ~/.composer/vendor/standards
+phpcs --config-set installed_paths ~/.composer/vendor/standards
 
 # Node stuff
-wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-source ~/.profile
-
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 wait $!
+
+source ~/.profile
 sudo apt-get update
 
 # Install newest node with nvm
@@ -51,7 +51,7 @@ nvm install node
 
 # Install emacs26 & doom
 sudo apt-get install -y emacs26
-git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+# git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 # ~/.emacs.d/bin/doom install
 
 # # Add personal doom conf
@@ -87,8 +87,8 @@ sudo mv wp-cli.phar /usr/local/bin/wp
 
 
 # Give user ownership to the dev folder
-chown -R $user:$user /development
-chmod -R g+wrx /development
+sudo chown -R $user:$user /development
+sudo chmod -R g+wrx /development
 
 # Reboot at end of installation
 sudo apt-get update
