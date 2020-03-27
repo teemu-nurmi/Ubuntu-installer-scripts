@@ -85,8 +85,8 @@ a2enmod actions fastcgi proxy_fcgi
 systemctl restart apache2
 
 # Add apache to user and user to apache groups
-usermod -aG $user www-data
-usermod -aG www-data $user
+usermod -a -G $user www-data
+usermod -a -G www-data $user
 
 
 

@@ -15,6 +15,7 @@ wget -O - https://dbeaver.io/debs/dbeaver.gpg.key | sudo apt-key add -
 echo "deb https://dbeaver.io/debs/dbeaver-ce /" | sudo tee /etc/apt/sources.list.d/dbeaver.list
 
 wait $!
+sudo apt-get update
 
 # Install DBeaver
 sudo apt-get install -y dbeaver-ce
@@ -35,6 +36,7 @@ wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh |
 source ~/.profile
 
 wait $!
+sudo apt-get update
 
 # Install newest node with nvm
 nvm install node
@@ -50,22 +52,22 @@ nvm install node
 # Install emacs26 & doom
 sudo apt-get install -y emacs26
 git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom install
+# ~/.emacs.d/bin/doom install
 
-# Add personal doom conf
-cd ~/.doom.d
-git clone https://github.com/teemu-nurmi/doom-conf.git
-sudo cp -r doom-conf/. .
-sudo rm -rf doom-conf
-cd ..
+# # Add personal doom conf
+# cd ~/.doom.d
+# git clone https://github.com/teemu-nurmi/doom-conf.git
+# sudo cp -r doom-conf/. .
+# sudo rm -rf doom-conf
+# cd ..
 
-# Give user ownership of doom conf
-sudo chown -R $user:$user ~/.doom.d
-sudo chmod -R g+rwx ~/.doom.d
+# # Give user ownership of doom conf
+# sudo chown -R $user:$user ~/.doom.d
+# sudo chmod -R g+rwx ~/.doom.d
 
-# Refresh Doom
-cd ~/.emacs.d
-bin/doom refresh
+# # Refresh Doom
+# cd ~/.emacs.d
+# bin/doom refresh
 
 
 
@@ -89,4 +91,6 @@ chown -R $user:$user /development
 chmod -R g+wrx /development
 
 # Reboot at end of installation
+sudo apt-get update
+sudo apt-get upgrade -y
 sudo reboot
